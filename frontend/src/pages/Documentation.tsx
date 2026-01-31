@@ -126,66 +126,66 @@ export const Documentation = () => {
             </HStack>
             <OrderedList spacing={4} fontSize="md">
               <ListItem>
-                <Text fontWeight="700" mb={1}>Connect Your Wallet</Text>
+                <Text fontWeight="700" mb={1}>Deposit Cash (MoneyGram)</Text>
                 <Text fontSize="sm" color="gray.600">
-                  Install <ChakraLink color="brand.600" fontWeight="600" href="https://www.freighter.app" isExternal>Freighter wallet</ChakraLink> extension and connect it to VatanPay
+                  Visit any MoneyGram location in Dubai, deposit AED cash, and receive USDC instantly in your VatanPay wallet.
                 </Text>
               </ListItem>
               <ListItem>
-                <Text fontWeight="700" mb={1}>Enter Amount in AED</Text>
+                <Text fontWeight="700" mb={1}>Enter Amount</Text>
                 <Text fontSize="sm" color="gray.600">
-                  Specify how much you want to send (100-50,000 AED). You'll see real-time exchange rates from Stellar DEX
+                  Specify USDC amount. You'll see the exact INR cash pickup amount for your family.
                 </Text>
               </ListItem>
               <ListItem>
-                <Text fontWeight="700" mb={1}>Add Recipient Address</Text>
+                <Text fontWeight="700" mb={1}>Add Recipient</Text>
                 <Text fontSize="sm" color="gray.600">
-                  Enter the Stellar wallet address of your family member in India
+                  Enter family member's details. They can pick up cash at any MoneyGram India location.
                 </Text>
               </ListItem>
               <ListItem>
                 <Text fontWeight="700" mb={1}>Review & Confirm</Text>
                 <Text fontSize="sm" color="gray.600">
-                  Check the fee breakdown (0.5%) and estimated INR amount with slippage protection
+                  Check the fee breakdown (0.5%) and instant exchange rate.
                 </Text>
               </ListItem>
               <ListItem>
-                <Text fontWeight="700" mb={1}>Send Money</Text>
+                <Text fontWeight="700" mb={1}>Send Instantly</Text>
                 <Text fontSize="sm" color="gray.600">
-                  Transaction executes in 3 steps: <Badge colorScheme="blue">Escrow</Badge> → <Badge colorScheme="green">Path Payment</Badge> → <Badge colorScheme="purple">Completion</Badge>. Takes ~5 seconds total!
+                  Money moves in ~5 seconds! Recipient receives SMS code for immediate cash pickup.
                 </Text>
               </ListItem>
             </OrderedList>
           </Box>
 
-          {/* Token Economics Section */}
+          {/* MoneyGram Integration Section */}
           <Box id="token-economics" bg="white" p={8} borderRadius="3xl" boxShadow="glass-lg" border="1px" borderColor="gray.100">
             <HStack spacing={3} mb={6}>
               <Icon as={FaExchangeAlt} boxSize={6} color="success.500" />
-              <Heading size="lg" fontWeight="900">Understanding Tokens & Anchors</Heading>
+              <Heading size="lg" fontWeight="900">MoneyGram + USDC Integration</Heading>
             </HStack>
             
             <VStack align="stretch" spacing={6}>
               <Box>
-                <Heading size="md" mb={3} fontWeight="800" color="brand.600">What are AED and INR Tokens?</Heading>
+                <Heading size="md" mb={3} fontWeight="800" color="brand.600">Why USDC?</Heading>
                 <Text fontSize="sm" color="gray.700" mb={3}>
-                  AED and INR tokens are <strong>digital representations of real currencies</strong> on the Stellar blockchain, issued by trusted entities called <strong>Anchors</strong>.
+                  Instead of issuing our own custom tokens, VatanPay integrates with <strong>Circle's USDC</strong> running on the MoneyGram network. This ensures stability and global trust.
                 </Text>
                 <SimpleGrid columns={[1, 2]} spacing={4}>
                   <Box bg="brand.50" p={4} borderRadius="xl">
-                    <Text fontWeight="700" mb={2}>🇦🇪 AED Token</Text>
+                    <Text fontWeight="700" mb={2}>💵 Cash-to-USDC (On-Ramp)</Text>
                     <UnorderedList fontSize="sm" spacing={1}>
-                      <ListItem>1 AED token = 1 real AED</ListItem>
-                      <ListItem>Backed by <strong>Partner Anchor's</strong> reserves</ListItem>
-                      <ListItem>Redeemable for real AED anytime</ListItem>
+                      <ListItem>User deposits <strong>Cash AED</strong> at MoneyGram</ListItem>
+                      <ListItem>MoneyGram issues <strong>USDC</strong> to user's wallet</ListItem>
+                      <ListItem>Backed by US Treasury bonds (Circle)</ListItem>
                     </UnorderedList>
                   </Box>
                   <Box bg="success.50" p={4} borderRadius="xl">
-                    <Text fontWeight="700" mb={2}>🇮🇳 INR Token</Text>
+                    <Text fontWeight="700" mb={2}>💴 USDC-to-Cash (Off-Ramp)</Text>
                     <UnorderedList fontSize="sm" spacing={1}>
-                      <ListItem>1 INR token = 1 real INR</ListItem>
-                      <ListItem>Backed by <strong>Partner Anchor's</strong> reserves</ListItem>
-                      <ListItem>Redeemable for real INR anytime</ListItem>
+                      <ListItem>Recipient receives <strong>USDC</strong> instantly</ListItem>
+                      <ListItem>Visits MoneyGram location in India</ListItem>
+                      <ListItem>Withdraws <strong>Cash INR</strong> immediately</ListItem>
                     </UnorderedList>
                   </Box>
                 </SimpleGrid>
@@ -194,31 +194,29 @@ export const Documentation = () => {
               <Divider />
 
               <Box>
-                <Heading size="md" mb={3} fontWeight="800" color="purple.600">The Anchor System</Heading>
+                <Heading size="md" mb={3} fontWeight="800" color="purple.600">The Partnership Model</Heading>
                 <Text fontSize="sm" color="gray.700" mb={3}>
-                  <strong>Anchors</strong> are trusted entities that bridge traditional banking and blockchain:
+                  VatanPay provides the <strong>Mobile Experience</strong> while MoneyGram provides the <strong>Physical Infrastructure</strong>.
                 </Text>
                 
                 <VStack align="stretch" spacing={4}>
                   <Box bg="purple.50" p={4} borderRadius="xl">
-                    <Text fontWeight="700" mb={2}>📥 On-Ramp (Real Money → Tokens)</Text>
-                    <Text fontSize="sm" mb={2}>Worker in UAE:</Text>
+                    <Text fontWeight="700" mb={2}>🏢 MoneyGram Handles:</Text>
                     <OrderedList fontSize="xs" spacing={1} ml={4}>
-                      <ListItem>Deposits real AED to VatanPay's bank account</ListItem>
-                      <ListItem>VatanPay verifies the deposit</ListItem>
-                      <ListItem>VatanPay issues AED tokens to worker's wallet</ListItem>
-                      <ListItem>Worker can now use tokens on blockchain</ListItem>
+                      <ListItem>Cash handling at 500,000+ locations</ListItem>
+                      <ListItem>KYC/AML Compliance</ListItem>
+                      <ListItem>Regional regulatory licenses</ListItem>
+                      <ListItem>Fiat liquidity management</ListItem>
                     </OrderedList>
                   </Box>
 
                   <Box bg="orange.50" p={4} borderRadius="xl">
-                    <Text fontWeight="700" mb={2}>📤 Off-Ramp (Tokens → Real Money)</Text>
-                    <Text fontSize="sm" mb={2}>Family in India:</Text>
+                    <Text fontWeight="700" mb={2}>📱 VatanPay Handles:</Text>
                     <OrderedList fontSize="xs" spacing={1} ml={4}>
-                      <ListItem>Receives INR tokens in Stellar wallet</ListItem>
-                      <ListItem>Opens VatanPay app and clicks "Withdraw"</ListItem>
-                      <ListItem>VatanPay burns the tokens</ListItem>
-                      <ListItem>VatanPay transfers real INR to family's bank account</ListItem>
+                      <ListItem>Instant mobile wallet transfers</ListItem>
+                      <ListItem>Gulf-India corridor specialization</ListItem>
+                      <ListItem>Simple, 5-second user experience</ListItem>
+                      <ListItem>Smart contract escrow for safety</ListItem>
                     </OrderedList>
                   </Box>
                 </VStack>
@@ -549,13 +547,13 @@ export const Documentation = () => {
                     <Box>
                       <Text fontWeight="700" color="brand.600">XLM (Stellar Lumens)</Text>
                       <Text fontSize="xs">
-                        Stellar's native cryptocurrency used ONLY for paying tiny network fees (~$0.000001 per transaction). You don't use XLM for remittances.
+                        Stellar's native cryptocurrency used ONLY for paying tiny network fees (~$0.000001).
                       </Text>
                     </Box>
                     <Box>
-                      <Text fontWeight="700" color="success.600">AED/INR Tokens</Text>
+                      <Text fontWeight="700" color="success.600">USDC (USD Coin)</Text>
                       <Text fontSize="xs">
-                        Digital representations of real currencies issued by anchors (like VatanPay). 1 AED token = 1 real AED in the bank. These are what you actually send.
+                        A fully backed digital dollar issued by Circle. This is what you actually send. It's as stable as the US Dollar and accepted globally by MoneyGram.
                       </Text>
                     </Box>
                   </VStack>
