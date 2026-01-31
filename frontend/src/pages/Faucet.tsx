@@ -10,7 +10,6 @@ import {
   Text,
   Alert,
   AlertIcon,
-  SimpleGrid,
   useToast,
   Icon,
   Select,
@@ -19,12 +18,11 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
-  Code,
   Badge,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useWallet } from '../hooks/useWallet';
-import { FaUniversity, FaMoneyBillWave, FaExchangeAlt } from 'react-icons/fa';
+import { FaUniversity, FaMoneyBillWave } from 'react-icons/fa';
 import * as StellarSdk from 'stellar-sdk';
 import { signTransaction } from '@stellar/freighter-api';
 

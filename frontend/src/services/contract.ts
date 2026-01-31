@@ -106,13 +106,13 @@ export const completeRemittance = async (
  * Get user's remittance history
  */
 export const getUserHistory = async (
-  userPublicKey: string,
-  offset: number = 0,
-  limit: number = 20
+  // userPublicKey: string,
+  // offset: number = 0,
+  // limit: number = 20
 ): Promise<Remittance[]> => {
   try {
-    const sourceAccount = await server.loadAccount(userPublicKey);
-    const contract = new StellarSdk.Contract(CONTRACT_ID);
+    // const sourceAccount = await server.loadAccount(userPublicKey);
+    // const contract = new StellarSdk.Contract(CONTRACT_ID);
 
     // This would need to be a read-only call
     // For MVP, we can skip this and query Horizon for contract events
