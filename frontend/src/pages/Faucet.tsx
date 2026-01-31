@@ -29,7 +29,7 @@ import { signTransaction } from '@stellar/freighter-api';
 // Exchange rates (tokens per XLM)
 // Realistic exchange rates matching DEX liquidity for demo simulation
 const EXCHANGE_RATES = {
-  AED: 0.33, // 1 XLM ≈ 0.33 AED (Market Rate) 
+  USDC: 0.1, // 1 XLM = 0.1 USDC (Liquidity Pool Rate) 
   INR: 20,   // 1 XLM = 20 INR
   XLM: 1,
 };
@@ -37,7 +37,7 @@ const EXCHANGE_RATES = {
 export const Faucet = () => {
   const { wallet } = useWallet();
   const toast = useToast();
-  const [selectedToken, setSelectedToken] = useState<'AED' | 'INR'>('AED');
+  const [selectedToken, setSelectedToken] = useState<'USDC' | 'INR'>('USDC');
   const [xlmAmount, setXlmAmount] = useState('5'); // Default 5 XLM
   const [isLoading, setIsLoading] = useState(false);
 
@@ -79,8 +79,9 @@ export const Faucet = () => {
       );
 
       // Create asset based on selection
-      const asset = selectedToken === 'AED'
-        ? new StellarSdk.Asset('AED', import.meta.env.VITE_AED_ISSUER || 'GCGH7MHBMNIRWEU6XKZ4CUGESGWZHQJL36ZI2ZOSZAQV6PREJDNYKEYZ')
+      // Using VITE_AED_ISSUER for USDC as we reused the keypair
+      const asset = selectedToken === 'USDC'
+        ? new StellarSdk.Asset('USDC', import.meta.env.VITE_AED_ISSUER || 'GCGH7MHBMNIRWEU6XKZ4CUGESGWZHQJL36ZI2ZOSZAQV6PREJDNYKEYZ')
         : new StellarSdk.Asset('INR', import.meta.env.VITE_INR_ISSUER || 'GBSVZWQQRRHZ2NF3WD3FVER2AUFQLVO5KWHXJJR3PTR5QWIW4QHNMITH');
 
       // Load source account
@@ -318,14 +319,14 @@ export const Faucet = () => {
                 </FormLabel>
                 <Select
                   value={selectedToken}
-                  onChange={(e) => setSelectedToken(e.target.value as 'AED' | 'INR')}
+                  onChange={(e) => setSelectedToken(e.target.value as 'USDC' | 'INR')}
                   size="lg"
                   fontSize="lg"
                   fontWeight="600"
                   h="64px"
                   icon={<FaMoneyBillWave />}
                 >
-                  <option value="AED">🇦🇪 AED (UAE Dirham)</option>
+                  <option value="USDC">🇺🇸 USDC (USD Coin)</option>
                   <option value="INR">🇮🇳 INR (Indian Rupee)</option>
                 </Select>
               </FormControl>

@@ -38,10 +38,10 @@ const server = new StellarSdk.Horizon.Server('https://horizon-testnet.stellar.or
 async function setupLiquidity() {
     try {
         // Get credentials from environment
-        const aedIssuerPubkey = process.env.AED_ISSUER;
+        const usdcIssuerPubkey = process.env.AED_ISSUER; // Reusing AED_ISSUER as USDC_ISSUER
         const inrIssuerPubkey = process.env.INR_ISSUER;
         const distributorPubkey = process.env.DISTRIBUTOR;
-        const aedIssuerSecret = process.env.AED_ISSUER_SECRET;
+        const usdcIssuerSecret = process.env.AED_ISSUER_SECRET;
         const inrIssuerSecret = process.env.INR_ISSUER_SECRET;
         const distributorSecret = process.env.DISTRIBUTOR_SECRET;
         
@@ -49,7 +49,7 @@ async function setupLiquidity() {
         const distributorAccount = await server.loadAccount(distributorPubkey);
         
         // Define assets
-        const AED = new StellarSdk.Asset('AED', aedIssuerPubkey);
+        const USDC = new StellarSdk.Asset('USDC', usdcIssuerPubkey);
         const INR = new StellarSdk.Asset('INR', inrIssuerPubkey);
         const XLM = StellarSdk.Asset.native();
         
@@ -62,8 +62,8 @@ async function setupLiquidity() {
             networkPassphrase: StellarSdk.Networks.TESTNET,
         })
         .addOperation(StellarSdk.Operation.changeTrust({
-            asset: AED,
-            limit: '1000000000', // 1B AED - Increase limit to avoid op_line_full
+            asset: USDC,
+            limit: '1000000000', // 1B USDC
         }))
         .addOperation(StellarSdk.Operation.changeTrust({
             asset: INR,
@@ -111,9 +111,13 @@ async function setupLiquidity() {
             }
         };
 
-        await fundAccount(await server.loadAccount(aedIssuerPubkey), distributorPubkey, AED, '100000', aedIssuerSecret, 'AED');
+        await fundAccount(await server.loadAccount(usdcIssuerPubkey), distributorPubkey, USDC, '100000', usdcIssuerSecret, 'USDC');
         await new Promise(resolve => setTimeout(resolve, 1000));
         
+        // Keep INR generic for now, or maybe Recipient receives USDC too?
+        // Let's keep INR for the "Family receives INR" narrative if path payment is used.
+        // But if user sends USDC, maybe no INR needed? 
+        // Let's fund INR just in case.
         await fundAccount(await server.loadAccount(inrIssuerPubkey), distributorPubkey, INR, '5000000', inrIssuerSecret, 'INR');
         await new Promise(resolve => setTimeout(resolve, 1000));
         
@@ -123,7 +127,7 @@ async function setupLiquidity() {
         // Reload distributor account with updated balances
         const distributorAccountUpdated = await server.loadAccount(distributorPubkey);
         
-        // First, cancel any existing offers
+        // First, cancel any existing offers to avoid clutter
         console.log('   🗑️  Canceling existing offers...');
         const offers = await server.offers().forAccount(distributorPubkey).call();
         
@@ -155,84 +159,69 @@ async function setupLiquidity() {
         // Reload account after canceling offers
         const freshAccount = await server.loadAccount(distributorPubkey);
         
-        // Create liquidity offers with REALISTIC conversion rates
-        // Real rates: 1 XLM = ₹19.68, 1 AED = ₹25.04
-        // Simplified for demo: 1 XLM = 20 INR, 1 AED = 25 INR
+        // Create liquidity offers 
+        // Rates: 
+        // 1 USDC = 3.67 AED (Pegged)
+        // 1 XLM = 0.33 AED = ~0.09 USDC (Current market: 1 XLM = 0.09 USD)
+        // Let's use 1 XLM = 0.1 USDC for simplicity.
+        
         console.log('   📤  Creating liquidity offers with realistic rates...');
         
         let offerTx = new StellarSdk.TransactionBuilder(freshAccount, {
             fee: StellarSdk.BASE_FEE,
             networkPassphrase: StellarSdk.Networks.TESTNET,
         })
-        // XLM → AED: Distributor sells AED for XLM (enables XLM → AED swaps)
-        // Rate: 1 AED = 3.0 XLM (Expensive Ask)
+        // XLM → USDC: Sell USDC for XLM
+        // Rate: 1 XLM = 0.1 USDC. 
+        // Price = buying/selling = XLM/USDC = 1/0.1 = 10? No.
+        // manageSellOffer(selling: USDC, buying: XLM, price: 10) -> 1 USDC costs 10 XLM.
+        // Correct.
         .addOperation(StellarSdk.Operation.manageSellOffer({
-            selling: AED,
+            selling: USDC,
             buying: XLM,
-            amount: '25000',
-            price: '3.0', 
+            amount: '50000', // Sell 50k USDC
+            price: '10.0',   // 1 USDC = 10 XLM
         }))
-        // XLM → INR: Distributor sells INR for XLM (enables XLM → INR swaps)
-        // Rate: 1 INR = 0.05 XLM (1 XLM = 20 INR)
+        
+        // USDC → XLM: Sell XLM for USDC
+        // Rate: 10 XLM = 1 USDC.
+        // Price = buying/selling = USDC/XLM = 0.1
+        // manageSellOffer(selling: XLM, buying: USDC, price: 0.1) -> 1 XLM costs 0.1 USDC.
+        .addOperation(StellarSdk.Operation.manageSellOffer({
+            selling: XLM,
+            buying: USDC,
+            amount: '5000',
+            price: '0.1',   
+        }))
+        
+        // XLM → INR: Sell INR for XLM
+        // 1 XLM = 20 INR. (Price = XLM/INR = 0.05)
         .addOperation(StellarSdk.Operation.manageSellOffer({
             selling: INR,
             buying: XLM,
             amount: '1250000',
             price: '0.05', 
         }))
-        // AED → XLM: Distributor sells XLM for AED (enables AED → XLM swaps)
-        // Rate: 1 XLM = 0.40 AED (Cheap Bid)
-        // User gives 100 AED. Max they can get?
-        // 1 XLM cost 0.40 AED.
-        // 100 / 0.40 = 250 XLM.
-        // 250 XLM * 20 (INR/XLM) = 5000 INR.
-        // Result: 100 AED -> 5000 INR. (Rate 50). A bit high (Real is 22).
-        // Let's adjust to be closer to 22.
-        // Target: 100 AED -> 2200 INR.
-        // 2200 INR / 20 (INR per XLM) = 110 XLM.
-        // We need 100 AED to buy 110 XLM.
-        // 110 XLM * Price = 100 AED.
-        // Price = 100 / 110 = 0.9 AED/XLM.
-        // Let's use Price = 0.9.
-        .addOperation(StellarSdk.Operation.manageSellOffer({
-            selling: XLM,
-            buying: AED,
-            amount: '5000',
-            price: '0.9',   
-        }))
-        .setTimeout(180) // Reduced timeout to fail faster if issues
+        
+        .setTimeout(180)
         .build();
         
         console.log('   📤 Submitting offer transaction...');
         offerTx.sign(StellarSdk.Keypair.fromSecret(distributorSecret));
-        const gridResult = await server.submitTransaction(offerTx);
-        console.log('   ✅ Liquidity offers created! TX Hash:', gridResult.hash);
-        console.log('   ✅ Offers verified via submission.');
+        await server.submitTransaction(offerTx);
+        console.log('   ✅ Liquidity offers created!');
         
-        // Check if offers exist
+        // Verification logic
         console.log('   🔍 Verifying Order Book...');
-        
-        // Check XLM -> AED (selling AED for XLM)
-        const checkAedBook = await server.orderbook(AED, XLM).call();
-        // Check XLM -> INR (selling INR for XLM)
-        const checkInrBook = await server.orderbook(INR, XLM).call();
-        
-        // We added:
-        // 1. Sell AED for XLM (buying XLM with AED) -> waits, selling XLM for AED
-        // The operation was: manageSellOffer(selling: XLM, buying: AED)
-        // This appears on the orderbook as: Selling XLM (Native), Buying AED
-        const checkXlmAedBook = await server.orderbook(XLM, AED).call();
-
-        if (checkXlmAedBook.asks.length > 0) {
-             console.log('   ✅ XLM -> AED Liquidity Confirmed (Ask present)');
+        const checkUsdcBook = await server.orderbook(USDC, XLM).call();
+        if (checkUsdcBook.bids.length > 0 || checkUsdcBook.asks.length > 0) {
+             console.log('   ✅ XLM <-> USDC Liquidity Confirmed');
         } else {
-             console.log('   ⚠️ XLM -> AED Liquidity NOT found (No asks)');
+             console.log('   ⚠️ XLM <-> USDC Liquidity NOT found');
         }
-        
+
     } catch (error) {
         console.error('❌ Error setting up liquidity:', error);
-        // Continue if it's just an "op_line_full" error from before? 
-        // No, we want to see the error.
         if (error.response?.data) {
             console.error('Details:', JSON.stringify(error.response.data, null, 2));
         }

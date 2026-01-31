@@ -24,17 +24,17 @@ import { signStellarTransaction } from '../services/wallet';
 import * as StellarSdk from 'stellar-sdk';
 import { FaExchangeAlt, FaBolt, FaCheckCircle } from 'react-icons/fa';
 
-const AED_ISSUER = import.meta.env.VITE_AED_ISSUER || 'GCGH7MHBMNIRWEU6XKZ4CUGESGWZHQJL36ZI2ZOSZAQV6PREJDNYKEYZ';
+const USDC_ISSUER = import.meta.env.VITE_AED_ISSUER || 'GCGH7MHBMNIRWEU6XKZ4CUGESGWZHQJL36ZI2ZOSZAQV6PREJDNYKEYZ';
 const INR_ISSUER = import.meta.env.VITE_INR_ISSUER || 'GBSVZWQQRRHZ2NF3WD3FVER2AUFQLVO5KWHXJJR3PTR5QWIW4QHNMITH';
 
-const AED_ASSET = new StellarSdk.Asset('AED', AED_ISSUER);
+const USDC_ASSET = new StellarSdk.Asset('USDC', USDC_ISSUER);
 const INR_ASSET = new StellarSdk.Asset('INR', INR_ISSUER);
 
 export const SendMoney = () => {
   const { wallet } = useWallet();
   const toast = useToast();
 
-  const [amount, setAmount] = useState(''); // Amount in AED
+  const [amount, setAmount] = useState(''); // Amount in USDC
   const [recipient, setRecipient] = useState('');
   const [exchangeRate, setExchangeRate] = useState<number | null>(null);
   const [estimatedINR, setEstimatedINR] = useState('');
@@ -45,7 +45,7 @@ export const SendMoney = () => {
   // Store the path found during rate lookup
   const [paymentPath, setPaymentPath] = useState<StellarSdk.Asset[]>([]);
 
-  // Fetch exchange rate (AED -> INR) whenever amount changes
+  // Fetch exchange rate (USDC -> INR) whenever amount changes
   useEffect(() => {
     if (!amount || parseFloat(amount) === 0) {
       setExchangeRate(null);
@@ -59,12 +59,12 @@ export const SendMoney = () => {
       setIsFetchingRate(true);
       try {
         const amountFloat = parseFloat(amount);
-        const result = await getExchangeRate(AED_ASSET, INR_ASSET, amount);
+        const result = await getExchangeRate(USDC_ASSET, INR_ASSET, amount);
         setExchangeRate(result.rate);
         setEstimatedINR(result.estimatedOutput);
         setPaymentPath(result.path); // Store the path
         
-        // Fee in AED (0.5%)
+        // Fee in USDC (0.5%)
         const feeAmount = amountFloat * 0.005;
         setFee(feeAmount.toFixed(2));
       } catch (error) {
@@ -111,17 +111,17 @@ export const SendMoney = () => {
 
       toast({
         title: 'Executing cross-border payment...',
-        description: 'AED → INR path payment',
+        description: 'USDC → INR path payment',
         status: 'info',
         duration: 3000,
       });
 
-      // Execute path payment (AED → INR) via Stellar DEX
+      // Execute path payment (USDC → INR) via Stellar DEX
       const txHash = await executePathPayment(
         {
           sourcePublicKey: wallet.publicKey,
           destinationPublicKey: recipient,
-          sendAsset: AED_ASSET,
+          sendAsset: USDC_ASSET,
           sendAmount: amount,
           destAsset: INR_ASSET,
           destMin: minINR,
@@ -157,9 +157,9 @@ export const SendMoney = () => {
         
         const opErrors = codes.operations || [];
         if (opErrors.includes('op_too_few_offers')) {
-          errorMessage = 'No liquidity path found for AED → INR. Ensure liquidity (AED→XLM and XLM→INR) exists.';
+          errorMessage = 'No liquidity path found for USDC → INR. Ensure liquidity (USDC→XLM and XLM→INR) exists.';
         } else if (opErrors.includes('op_underfunded')) {
-          errorMessage = `Insufficient AED balance. You need at least ${amount} AED.`;
+          errorMessage = `Insufficient USDC balance. You need at least ${amount} USDC.`;
         } else if (opErrors.includes('op_no_trust')) {
           errorMessage = 'Recipient missing trustline for INR token.';
         } else if (opErrors.length > 0) {
@@ -234,7 +234,7 @@ export const SendMoney = () => {
               Send Money
             </Heading>
             <Text color="gray.600" fontSize="lg">
-              Send AED directly to India - instantly converted to INR
+              Send USDC directly to India - instantly converted to INR
             </Text>
           </VStack>
 
@@ -256,7 +256,7 @@ export const SendMoney = () => {
                   color="gray.700"
                   mb={3}
                 >
-                  Amount (AED)
+                  Amount (USDC)
                 </FormLabel>
                 <HStack>
                   <Input
@@ -283,7 +283,7 @@ export const SendMoney = () => {
                     fontWeight="bold"
                     color="gray.600"
                   >
-                    AED
+                    USDC
                   </Box>
                 </HStack>
               </FormControl>
@@ -367,7 +367,7 @@ export const SendMoney = () => {
                           Sending
                         </Text>
                         <Text fontSize="2xl" fontWeight="900" color="gray.900">
-                          {amount} AED
+                          {amount} USDC
                         </Text>
                       </Box>
                       <Box bg="white" p={4} borderRadius="xl" boxShadow="sm">
@@ -375,7 +375,7 @@ export const SendMoney = () => {
                           Exchange Rate
                         </Text>
                         <Text fontSize="lg" fontWeight="800" color="brand.600">
-                          1 AED = {exchangeRate.toFixed(2)} INR
+                          1 USDC = {exchangeRate.toFixed(2)} INR
                         </Text>
                       </Box>
                       <Box bg="white" p={4} borderRadius="xl" boxShadow="sm">
@@ -383,7 +383,7 @@ export const SendMoney = () => {
                           Platform Fee (0.5%)
                         </Text>
                         <Text fontSize="lg" fontWeight="800" color="gray.700">
-                          {fee} AED
+                          {fee} USDC
                         </Text>
                       </Box>
                       <Box bg="white" p={4} borderRadius="xl" boxShadow="sm">
