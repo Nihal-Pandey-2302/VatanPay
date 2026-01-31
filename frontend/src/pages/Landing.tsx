@@ -75,13 +75,22 @@ export const Landing = () => {
                 Send Money Home Instantly
               </Heading>
               <Heading
-                size="xl"
-                fontWeight="700"
-                color="success.200"
-                letterSpacing="-0.02em"
-              >
-                With Sub-0.5% Fees
-              </Heading>
+              as="h1"
+              size="4xl"
+              fontWeight="900"
+              lineHeight="1.2"
+              letterSpacing="-0.04em"
+              color="brand.900"
+            >
+              Send money home <br />
+              <Text as="span" color="brand.500">
+                instantly via MoneyGram
+              </Text>
+            </Heading>
+            <Text fontSize="xl" color="gray.600" maxW="lg" lineHeight="1.8">
+              The speed of Stellar. The trust of MoneyGram. <br/>
+              Send USDC instantly from the Gulf to India with <b>0.5% fees</b>.
+            </Text>
             </Box>
             
             <Text

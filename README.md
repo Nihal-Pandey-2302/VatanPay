@@ -2,12 +2,12 @@
 
 <div align="center">
 
-**Send money home instantly with 0.5% fees powered by Stellar blockchain**
+**Send money home instantly with 0.5% fees using MoneyGram + Stellar**
 
 [![Stellar](https://img.shields.io/badge/Stellar-Testnet-blue)](https://stellar.org)
-[![Soroban](https://img.shields.io/badge/Soroban-Smart_Contracts-purple)](https://soroban.stellar.org)
+[![MoneyGram](https://img.shields.io/badge/MoneyGram-Integration-red)](https://moneygram.com)
+[![USDC](https://img.shields.io/badge/USDC-Stablecoin-green)](https://circle.com)
 [![React](https://img.shields.io/badge/React-18-61DAFB)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)](https://www.typescriptlang.org)
 
 [Live Demo](https://vatan-pay.vercel.app/) | [Documentation](./docs/HOW_IT_WORKS.md) | [Business Model](./docs/BUSINESS_MODEL.md)
 
@@ -51,13 +51,13 @@ VatanPay enables Indian migrant workers in the Gulf to send money home instantly
 
 ### Our Solution
 
-- ⚡ **5-second settlement** via Stellar path payments
+- ⚡ **5-second settlement** via Stellar + USDC
 - 💰 **0.5% platform fee** (10x cheaper)
-- 🌍 **24/7 availability** - no banking hours
-- 🔒 **Trustless escrow** via smart contracts
-- 🎁 **Self-contained demo** with built-in token faucet
+- 🌍 **MoneyGram Integration** for cash on/off-ramps
+- 🔒 **Trustless** via Circle's USDC stablecoin
+- 🎁 **Simulated Demo** showing the cash-to-USDC flow
 
-> **Note:** This is a testnet demonstration. Production deployment requires banking partnerships, regulatory compliance (KYC/AML), and licensed anchor services for real fiat on/off-ramps. See [Production Roadmap](#-production-roadmap) for details.
+> **Note:** This is a testnet simulation of MoneyGram's integration. In production, users deposit cash at MoneyGram locations to receive USDC. This demo uses test tokens to simulate that flow. See [Production Roadmap](#-production-roadmap) for details.
 
 ---
 

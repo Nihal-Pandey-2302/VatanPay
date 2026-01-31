@@ -92,53 +92,43 @@ graph TB
 
 ---
 
-## Token Economics
+## MoneyGram Integration
 
-### What Are Stellar Assets?
+### Why MoneyGram?
 
-On Stellar, custom assets are **not cryptocurrencies** - they're **digital representations of real-world currencies** issued by trusted entities called **Anchors**.
+VatanPay partners with **MoneyGram** because they already have the physical infrastructure that blockchain startups lack:
 
-### AED Token (UAE Dirham)
+- **500,000+ locations** in 180 countries
+- **Licensed & Regulated** for cash handling
+- **Existing Stellar integration** for USDC settlement
 
-- **Issuer**: Regulated Partner Anchor (e.g., licensed exchange house)
-- **Backing**: 1 AED token = 1 real AED in Anchor's bank account
-- **Purpose**: Digital representation of Emirati Dirham on blockchain
+### The Hybrid Model
 
-### INR Token (Indian Rupee)
+Instead of issuing our own risky tokens, we leverage the **USDC stablecoin** running on MoneyGram's network.
 
-- **Issuer**: Regulated Partner Anchor (e.g., licensed fintech)
-- **Backing**: 1 INR token = 1 real INR in Anchor's bank account
-- **Purpose**: Digital representation of Indian Rupee on blockchain
+#### 1. Cash In (MoneyGram)
 
-### XLM (Stellar Lumens)
+- **User Action:** Deposits physical AED cash at MoneyGram Dubai location.
+- **System Action:** MoneyGram issues equivalent **USDC** to user's VatanPay wallet.
+- **Trust:** User trusts MoneyGram (regulated entity), not VatanPay.
 
-- **Purpose**: Pay network transaction fees ONLY
-- **Amount needed**: Tiny (0.00001 XLM per transaction ≈ $0.000001)
-- **NOT used for remittances**: Just for fees
+#### 2. Instant Transfer (VatanPay)
 
-### Trust Lines
+- **User Action:** Presses "Send" in VatanPay app.
+- **System Action:** USDC is transferred via Stellar to recipient's wallet in 5 seconds.
+- **Efficiency:** VatanPay provides the slick mobile UX that MoneyGram lacks.
 
-Before using custom tokens, wallets must establish "trust lines":
+#### 3. Cash Out (MoneyGram)
 
-```
-User's Wallet → Trusts → AED Issuer
-User's Wallet → Trusts → INR Issuer
-```
+- **User Action:** Recipient visits MoneyGram Mumbai location.
+- **System Action:** MoneyGram redeems USDC for physical INR cash.
 
----
+### VatanPay's Role
 
-## The Anchor System
+We are the **Experience Layer** on top of MoneyGram's **Infrastructure Layer**.
 
-### What is an Anchor?
-
-An **Anchor** is a regulated financial institution (like a bank or licensed fintech) that:
-
-1.  Holds real fiat currency in bank accounts
-2.  Issues equivalent tokens on Stellar blockchain
-3.  Redeems tokens for real fiat currency
-4.  Handle KYC/AML compliance
-
-**VatanPay's Role**: We are the **Interface Layer**. We don't issue tokens. We connect users to existing, licensed anchors.
+- MoneyGram handles the "hard stuff" (Cash, Licenses, Compliance).
+- VatanPay handles the "easy stuff" (Mobile App, Instant Transfer, User Experience).
 
 ### On-Ramp Process (Real Money → Tokens)
 

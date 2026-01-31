@@ -274,23 +274,24 @@ export const Faucet = () => {
               Simulate Bank Deposit
             </Heading>
             <Text color="gray.600" fontSize="lg" maxW="xl">
-              Deposit fiat currency (AED/INR) into your VatanPay wallet via Partner Anchor.
+              Deposit cash (AED/INR) into your VatanPay wallet via MoneyGram.
             </Text>
-            <Badge colorScheme="orange" variant="solid" fontSize="sm" mt={2} px={3} py={1} borderRadius="full">
-              Testnet Demo Mode
+            <Badge colorScheme="blue" variant="solid" fontSize="sm" mt={2} px={3} py={1} borderRadius="full">
+              Simulating MoneyGram Integration
             </Badge>
           </VStack>
 
           {/* Setup Warning */}
-          <Alert status="warning" borderRadius="xl" bg="orange.50" border="1px" borderColor="orange.200">
+          <Alert status="info" borderRadius="xl" bg="blue.50" border="1px" borderColor="blue.200">
             <AlertIcon />
             <Box>
               <Text fontWeight="700" fontSize="sm" mb={1}>
-                ⚠️ Testnet Simulation
+                ℹ️ Testnet Simulation
               </Text>
               <Text fontSize="xs" color="gray.700">
-                In production, this would be a real bank transfer.
-                For this demo, we swap testnet XLM for AED/INR tokens to simulate the deposit.
+                This faucet simulates MoneyGram's cash deposit process. 
+                In production, users deposit cash at MoneyGram locations 
+                and receive USDC on Stellar. For this demo, we use test tokens.
               </Text>
             </Box>
           </Alert>
