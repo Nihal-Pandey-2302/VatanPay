@@ -61,14 +61,31 @@ VatanPay enables Indian migrant workers in the Gulf to send money home instantly
 
 ---
 
+## 📸 Screenshots
+
+<div align="center">
+  <img src="screenshots/BankDeposit.png" alt="Bank Deposit Page" width="800"/>
+  <p><em>Bank Deposit (Faucet) - Simulating MoneyGram Integration</em></p>
+  <br/>
+  
+  <img src="screenshots/Tx history.png" alt="Transaction History" width="800"/>
+  <p><em>Transaction History - Verifiable On-Chain Proofs</em></p>
+  <br/>
+
+  <img src="screenshots/Docs.png" alt="Documentation" width="800"/>
+  <p><em>Comprehensive Documentation & Guides</em></p>
+</div>
+
+---
+
 ## ✨ Features
 
 ### 🎨 Complete User Interface (6 Pages)
 
 1. **Landing Page** - Learn about VatanPay's value proposition
 2. **Send Money** - Execute remittances with real-time exchange rates
-3. **Token Faucet** ⭐ NEW - Get free test AED/INR tokens (simulates on-ramp)
-4. **Token Swap** ⭐ NEW - Convert tokens to XLM (simulates off-ramp)
+3. **Bank Deposit (Faucet)** ⭐ NEW - Simulate depositing AED cash to get USDC
+4. **Token Swap** - Convert miscellaneous tokens to XLM (off-ramp)
 5. **History** - View transaction history
 6. **Documentation** - Complete guide to token economics and anchors
 
@@ -118,12 +135,13 @@ graph TB
         Recipient[Family's Wallet]
     end
 
-    Worker -->|1. Get Tokens| Faucet
-    Worker -->|2. Send AED| SendPage
-    SendPage -->|3. Escrow| SC
-    SC -->|4. Path Payment| DEX
-    DEX -->|5. Convert AED→USDC→INR| Recipient
-    Recipient -->|6. Cash Out| Swap
+    Worker -->|1. Deposit Cash| MoneyGram[MoneyGram Agent]
+    MoneyGram -->|2. Issue USDC| Worker
+    Worker -->|3. Send USDC| SendPage
+    SendPage -->|4. Escrow| SC
+    SC -->|5. Path Payment| DEX
+    DEX -->|6. Convert USDC→XLM→INR| Recipient
+    Recipient -->|7. Cash Out| Swap
 ```
 
 ### Transaction Flow (3 Steps)
@@ -136,18 +154,18 @@ sequenceDiagram
     participant DEX as Stellar DEX
     participant Family as Family in India
 
-    User->Frontend: Enter amount & recipient
+    User->Frontend: Enter amount (USDC) & recipient
     Frontend->DEX: Query exchange rate
-    DEX-->Frontend: 1 AED = 22.50 INR
+    DEX-->Frontend: 1 USDC = 200.5 INR
 
     Note over Frontend,Contract: STEP 1 - ESCROW
-    Frontend->Contract: create_remittance(1000 AED)
-    Contract->Contract: Lock AED in escrow
+    Frontend->Contract: create_remittance(10 USDC)
+    Contract->Contract: Lock USDC in escrow
     Contract-->Frontend: Remittance ID
 
     Note over Frontend,Family: STEP 2 - PATH PAYMENT
-    Frontend->DEX: Execute AED→USDC→INR
-    DEX->Family: Transfer 22,450 INR
+    Frontend->DEX: Execute USDC→XLM→INR
+    DEX->Family: Transfer ~2,000 INR
     DEX-->Frontend: Transaction hash
 
     Note over Frontend,Contract: STEP 3 - COMPLETE
@@ -185,35 +203,34 @@ sequenceDiagram
 
 ### Complete User Journey
 
-**1. Get Test Tokens** 🎁
+**1. Bank Deposit (Simulated)** 🏦
 
 ```
 → Visit /faucet
-→ Select AED or INR
-→ Click "Claim 10,000 AED"
-→ Tokens appear in wallet
+→ Select "Deposit AED Cash"
+→ System simulates MoneyGram deposit
+→ You receive **USDC** in your wallet
 ```
 
 **2. Send Money** 💸
 
 ```
 → Visit /send
-→ Enter amount (1,000 AED)
-→ See real-time rate (1 AED = ~22.50 INR)
+→ Enter amount (e.g., 10 USDC)
+→ See real-time rate (1 USDC = ~200 INR)
 → Enter recipient address
-→ Review summary (Recipient gets: 22,375 INR)
+→ Review summary (Recipient gets: ~2,000 INR)
 → Approve in Freighter
 → Transaction completes in 5 seconds!
 ```
 
-**3. Swap to XLM** 💱
+**3. Cash Out** 💱
 
 ```
 → Visit /swap
-→ Select token (AED)
-→ Enter amount (9,000 AED)
-→ See estimate (~4,050 XLM)
-→ Execute swap instantly
+→ Select token (INR)
+→ Swap to "Cash" (Simulated via XLM off-ramp)
+→ Funds ready for pickup!
 ```
 
 **4. Learn More** 📚
@@ -277,29 +294,41 @@ remittchain/
 
 ---
 
+## 🌐 Testnet Deployment
+
+**Live Contracts & Assets**
+
+| Component          | Address / ID                                                        | Explorer                                                                                                                            |
+| :----------------- | :------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------- |
+| **Smart Contract** | `CCB7BFIGSC6PRVVYHKZCEBFL4C7KTD4JU7NTLLMOUPEYHPGCQCH6GZU4`          | [View on Stellar.Expert](https://stellar.expert/explorer/testnet/contract/CCB7BFIGSC6PRVVYHKZCEBFL4C7KTD4JU7NTLLMOUPEYHPGCQCH6GZU4) |
+| **USDC Asset**     | `USDC` : `GCGH7MHBMNIRWEU6XKZ4CUGESGWZHQJL36ZI2ZOSZAQV6PREJDNYKEYZ` | [View Asset](https://stellar.expert/explorer/testnet/asset/USDC-GCGH7MHBMNIRWEU6XKZ4CUGESGWZHQJL36ZI2ZOSZAQV6PREJDNYKEYZ)           |
+| **Network**        | Stellar Testnet                                                     | `https://horizon-testnet.stellar.org`                                                                                               |
+
+---
+
 ## 🚦 How to Use
 
 ### 1. Install Freighter Wallet
 
 Download from [freighter.app](https://freighter.app) and set to **Testnet mode**.
 
-### 2. Get Test Tokens (Built-in!)
+### 2. Bank Deposit (On-Ramp)
 
-With VatanPay's built-in faucet, just:
+In the real world, you would walk into a MoneyGram agent. In this demo:
 
 - Connect your wallet
-- Visit the **Faucet** page
-- Claim 10,000 AED or 225,000 INR
-- Start testing!
+- Visit the **Bank Deposit** (Faucet) page
+- Click "**Deposit AED Cash**"
+- The system simulates a cash deposit and sends **USDC** to your wallet
 
 ### 3. Send Money
 
 1. Visit **Send Money** page
-2. Enter amount in AED (100-50,000)
+2. Enter amount in **USDC** (e.g., 10 USDC)
 3. Add recipient's Stellar address
-4. Review exchange rate and fees
+4. The system calculates the conversion to **INR**
 5. Confirm transaction
-6. Money arrives in ~5 seconds!
+6. Recipient receives **INR** instantly!
 
 ### 4. Cash Out (Simulated)
 
@@ -464,18 +493,10 @@ To launch VatanPay in production:
 
 ---
 
-## 📧 Contact
-
-**Built for**: Stellar Meridian Hackathon 2026  
-**Documentation**: Comprehensive guides in `/docs`  
-**Demo**: Self-contained with built-in token faucet
-
----
-
 <div align="center">
 
 **⭐ Star this repo if you find it useful!**
 
-**Powered by Stellar & Soroban** | **Addressing the $36B Gulf-India remittance corridor** | **Built with ❤️ for migrant workers**
+**Powered by Stellar & Soroban** | **Addressing the $36B Gulf-India remittance corridor**
 
 </div>

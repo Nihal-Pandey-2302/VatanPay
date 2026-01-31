@@ -20,7 +20,6 @@ import {
   SimpleGrid,
   Icon,
   Divider,
-  Badge,
 } from '@chakra-ui/react';
 import { FaRocket, FaShieldAlt, FaExchangeAlt, FaUniversity, FaQuestionCircle } from 'react-icons/fa';
 
@@ -278,7 +277,7 @@ export const Documentation = () => {
                   <Box>
                     <Text fontSize="sm" fontWeight="bold">Why is this needed?</Text>
                     <Text fontSize="xs">
-                      By default, Stellar accounts can only hold XLM. To receive AED or INR tokens, you must first create a trustline to "trust" the token issuer.
+                      By default, Stellar accounts can only hold XLM. To receive USDC or INR tokens, you must first create a trustline to "trust" the token issuer.
                     </Text>
                   </Box>
                 </Alert>
@@ -293,7 +292,7 @@ export const Documentation = () => {
                     <Text fontWeight="700" mb={2}>✅ Automatic (Recommended)</Text>
                     <OrderedList fontSize="sm" spacing={1}>
                       <ListItem>Go to the <strong>Faucet</strong> page</ListItem>
-                      <ListItem>Select AED or INR token</ListItem>
+                      <ListItem>Select USDC or INR token</ListItem>
                       <ListItem>Enter any amount of XLM</ListItem>
                       <ListItem>Click "Get Tokens"</ListItem>
                       <ListItem>Trustline is created automatically! ✨</ListItem>
@@ -304,7 +303,7 @@ export const Documentation = () => {
                     <OrderedList fontSize="sm" spacing={1}>
                       <ListItem>Go to <ChakraLink color="blue.500" href="https://laboratory.stellar.org" isExternal>Stellar Laboratory</ChakraLink></ListItem>
                       <ListItem>Create Change Trust operation</ListItem>
-                      <ListItem>Enter asset code (AED/INR)</ListItem>
+                      <ListItem>Enter asset code (USDC/INR)</ListItem>
                       <ListItem>Enter issuer address</ListItem>
                       <ListItem>Sign and submit</ListItem>
                     </OrderedList>
@@ -343,7 +342,7 @@ export const Documentation = () => {
                     <Text fontWeight="700" mb={2}>💱 How It Works</Text>
                     <OrderedList fontSize="xs" spacing={1}>
                       <ListItem>Enter the XLM amount you want to swap</ListItem>
-                      <ListItem>Choose AED or INR tokens</ListItem>
+                      <ListItem>Choose USDC or INR tokens</ListItem>
                       <ListItem>System auto-creates trustline (first time only)</ListItem>
                       <ListItem>Executes path payment: XLM → Tokens</ListItem>
                       <ListItem>Tokens appear in your wallet in ~5 seconds!</ListItem>
@@ -353,8 +352,8 @@ export const Documentation = () => {
                   <Box bg="pink.50" p={4} borderRadius="xl">
                     <Text fontWeight="700" mb={2}>📊 Exchange Rates</Text>
                     <UnorderedList fontSize="xs" spacing={1}>
-                      <ListItem>1 XLM = 200 AED tokens</ListItem>
-                      <ListItem>1 XLM = 4,500 INR tokens</ListItem>
+                      <ListItem>1 XLM = 0.1 USDC (approx)</ListItem>
+                      <ListItem>1 XLM = 20 INR (approx)</ListItem>
                       <ListItem>Custom amounts supported</ListItem>
                       <ListItem>10% slippage tolerance</ListItem>
                     </UnorderedList>
@@ -436,7 +435,7 @@ export const Documentation = () => {
                   VatanPay uses Stellar's native path payment to convert currencies automatically:
                 </Text>
                 <Code display="block" my={2} p={3} fontSize="sm" borderRadius="lg" bg="gray.50">
-                  AED → XLM → INR (via Stellar DEX liquidity pools)
+                  USDC → XLM → INR (via Stellar DEX liquidity pools)
                 </Code>
                 <Text fontSize="sm" color="gray.600">
                   This ensures you get the best available exchange rate in real-time from the decentralized exchange.

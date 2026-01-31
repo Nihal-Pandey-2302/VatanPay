@@ -1,24 +1,31 @@
-# VatanPay Business Model & Economics
+# VatanPay Business Model: The Hybrid Layer
 
 ## Table of Contents
 
+- [The Pivot](#the-pivot)
 - [Revenue Model](#revenue-model)
 - [Cost Structure](#cost-structure)
-- [Unit Economics](#unit-economics)
 - [Competitive Advantage](#competitive-advantage)
-- [Partner Bank Relationships](#partner-bank-relationships)
-- [Why It's Still Profitable](#why-its-still-profitable)
-- [Real-World Comparisons](#real-world-comparisons)
+- [Strategic Partnerships](#strategic-partnerships)
+- [Unit Economics](#unit-economics)
 
 ---
 
-## The Core Question
+## The Pivot
 
-**"How will the banks earn profit through this, and when they do, will it not defeat the purpose and make it expensive?"**
+**From "Replacing Banks" to "Powering the Last Mile"**
 
-### Short Answer
+Originally, VatanPay aimed to be a full-stack neobank, holding reserves and issuing tokens. This is capital intensive and regulatory heavy.
 
-No! VatanPay charges **0.5% fees** (vs Western Union's 6%) and is still highly profitable because blockchain technology eliminates 90% of traditional infrastructure costs. Everyone wins except legacy remittance companies.
+**The New Model:**
+VatanPay is now a **software experience layer** built on top of **MoneyGram's global infrastructure**. We don't hold the cash; we just make moving it 100x faster and easier using the Stellar blockchain.
+
+| Feature                 | Old Model (Bank) | New Model (Software)      |
+| :---------------------- | :--------------- | :------------------------ |
+| **Capital Requirement** | $10M+ (Reserves) | <$500k (Development)      |
+| **Regulation**          | Banking License  | Software Provider         |
+| **Compliance**          | Full KYC/AML     | Leveraged (via MoneyGram) |
+| **Speed to Market**     | 2-3 Years        | 3-6 Months                |
 
 ---
 

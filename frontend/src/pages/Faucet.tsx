@@ -26,28 +26,33 @@ import { FaUniversity, FaMoneyBillWave } from 'react-icons/fa';
 import * as StellarSdk from 'stellar-sdk';
 import { signTransaction } from '@stellar/freighter-api';
 
-// Exchange rates (tokens per XLM)
-// Realistic exchange rates matching DEX liquidity for demo simulation
+// Exchange rates (Simulated for Demo)
+// 1 XLM = 0.1 USDC (Market Rate on Testnet)
+// 3.67 AED = 1 USDC (Fixed Peg)
 const EXCHANGE_RATES = {
-  USDC: 0.1, // 1 XLM = 0.1 USDC (Liquidity Pool Rate) 
-  INR: 20,   // 1 XLM = 20 INR
-  XLM: 1,
+  USDC_PER_XLM: 0.1,    // 1 XLM -> 0.1 USDC
+  AED_PER_USDC: 3.67,   // 1 USDC = 3.67 AED
 };
 
 export const Faucet = () => {
   const { wallet } = useWallet();
   const toast = useToast();
-  const [selectedToken, setSelectedToken] = useState<'USDC' | 'INR'>('USDC');
-  const [xlmAmount, setXlmAmount] = useState('5'); // Default 5 XLM
+  const [depositCurrency, setDepositCurrency] = useState<'AED'>('AED');
+  const [depositAmount, setDepositAmount] = useState('100'); // Default 100 AED
   const [isLoading, setIsLoading] = useState(false);
 
-  // Calculate how many tokens user will get
-  const calculateTokenAmount = (xlm: string): number => {
-    const xlmNum = parseFloat(xlm) || 0;
-    return Math.floor(xlmNum * EXCHANGE_RATES[selectedToken]);
+  // Calculate: User inputs AED -> We give them USDC
+  // Math: USDC = AED / 3.67
+  const calculateUsdcAmount = (aed: string): number => {
+    const aedNum = parseFloat(aed) || 0;
+    return Math.floor(aedNum / EXCHANGE_RATES.AED_PER_USDC); // e.g. 100 AED -> 27 USDC
   };
 
-  const tokenAmount = calculateTokenAmount(xlmAmount);
+  const usdcAmount = calculateUsdcAmount(depositAmount);
+
+  // XLM required to buy that much USDC
+  // XLM = USDC / 0.1
+  const xlmRequired = Math.ceil(usdcAmount / EXCHANGE_RATES.USDC_PER_XLM);
 
   const handleClaim = async () => {
     if (!wallet) {
@@ -60,8 +65,8 @@ export const Faucet = () => {
       return;
     }
 
-    const xlmNum = parseFloat(xlmAmount);
-    if (!xlmNum || xlmNum <= 0) {
+    const aedNum = parseFloat(depositAmount);
+    if (!aedNum || aedNum <= 0) {
       toast({
         title: 'Invalid amount',
         description: 'Please enter a valid amount',
@@ -78,11 +83,8 @@ export const Faucet = () => {
         import.meta.env.VITE_HORIZON_URL || 'https://horizon-testnet.stellar.org'
       );
 
-      // Create asset based on selection
-      // Using VITE_AED_ISSUER for USDC as we reused the keypair
-      const asset = selectedToken === 'USDC'
-        ? new StellarSdk.Asset('USDC', import.meta.env.VITE_AED_ISSUER || 'GCGH7MHBMNIRWEU6XKZ4CUGESGWZHQJL36ZI2ZOSZAQV6PREJDNYKEYZ')
-        : new StellarSdk.Asset('INR', import.meta.env.VITE_INR_ISSUER || 'GBSVZWQQRRHZ2NF3WD3FVER2AUFQLVO5KWHXJJR3PTR5QWIW4QHNMITH');
+      // We are ALWAYS giving USDC now
+      const asset = new StellarSdk.Asset('USDC', import.meta.env.VITE_AED_ISSUER || 'GCGH7MHBMNIRWEU6XKZ4CUGESGWZHQJL36ZI2ZOSZAQV6PREJDNYKEYZ');
 
       // Load source account
       const sourceAccount = await server.loadAccount(wallet.publicKey);
@@ -91,7 +93,7 @@ export const Faucet = () => {
       const hasTrustline = sourceAccount.balances.some(
         (balance: any) => 
           balance.asset_type !== 'native' && 
-          balance.asset_code === selectedToken &&
+          balance.asset_code === 'USDC' &&
           balance.asset_issuer === asset.getIssuer()
       );
 
@@ -99,7 +101,7 @@ export const Faucet = () => {
       if (!hasTrustline) {
         toast({
           title: 'Linking Bank Account...',
-          description: `Setting up ${selectedToken} wallet trustline`,
+          description: `Setting up USDC wallet trustline`,
           status: 'info',
           duration: 3000,
         });
@@ -130,7 +132,7 @@ export const Faucet = () => {
 
         toast({
           title: 'Account Connected!',
-          description: `You can now receive ${selectedToken} funds`,
+          description: `You can now receive USDC funds`,
           status: 'success',
           duration: 3000,
         });
@@ -140,9 +142,12 @@ export const Faucet = () => {
       }
 
       // Now perform the swap
+      // We simulate depositing AED by swapping user's XLM for USDC (Self-Funding Demo)
+      // Ideally this would come from a distribution server, but for testnet self-serve:
       const updatedAccount = await server.loadAccount(wallet.publicKey);
 
-      // Build path payment: XLM → Token
+      // Build path payment: XLM → USDC
+      // We send 'xlmRequired' XLM to get 'usdcAmount' USDC
       const transaction = new StellarSdk.TransactionBuilder(updatedAccount, {
         fee: StellarSdk.BASE_FEE,
         networkPassphrase: StellarSdk.Networks.TESTNET,
@@ -150,10 +155,10 @@ export const Faucet = () => {
         .addOperation(
           StellarSdk.Operation.pathPaymentStrictSend({
             sendAsset: StellarSdk.Asset.native(),
-            sendAmount: xlmAmount,
+            sendAmount: xlmRequired.toString(),
             destination: wallet.publicKey,
             destAsset: asset,
-            destMin: (tokenAmount * 0.9).toString(), // 10% slippage tolerance
+            destMin: (usdcAmount * 0.9).toString(), // 10% slippage tolerance
           })
         )
         .setTimeout(300)
@@ -176,14 +181,14 @@ export const Faucet = () => {
 
       toast({
         title: 'Deposit Successful!',
-        description: `Received ${tokenAmount.toLocaleString()} ${selectedToken} in your VatanPay wallet`,
+        description: `Deposited ${aedNum} AED. Received ${usdcAmount.toLocaleString()} USDC.`,
         status: 'success',
         duration: 5000,
         isClosable: true,
       });
       
       // Reset amount
-      setXlmAmount('5');
+      setDepositAmount('100');
     } catch (error) {
       console.error('Error funding wallet:', error);
       
@@ -201,7 +206,7 @@ export const Faucet = () => {
           } else if (opErrors.includes('op_too_few_offers')) {
             errorMessage = `No liquidity for bank transfer simulation. Run setup scripts.`;
           } else if (opErrors.includes('op_underfunded')) {
-            errorMessage = `Insufficient XLM for testnet fee.`;
+            errorMessage = `Insufficient Testnet XLM. You need ~${xlmRequired} XLM.`;
           } else if (opErrors.length > 0) {
             errorMessage = `Simulation failed: ${opErrors.join(', ')}`;
           }
@@ -275,7 +280,7 @@ export const Faucet = () => {
               Simulate Bank Deposit
             </Heading>
             <Text color="gray.600" fontSize="lg" maxW="xl">
-              Deposit cash (AED/INR) into your VatanPay wallet via MoneyGram.
+              Deposit cash (AED) into your VatanPay wallet via MoneyGram.
             </Text>
             <Badge colorScheme="blue" variant="solid" fontSize="sm" mt={2} px={3} py={1} borderRadius="full">
               Simulating MoneyGram Integration
@@ -315,19 +320,18 @@ export const Faucet = () => {
                   color="gray.700"
                   mb={3}
                 >
-                  Deposit Currency
+                  Deposit Currency (Cash)
                 </FormLabel>
                 <Select
-                  value={selectedToken}
-                  onChange={(e) => setSelectedToken(e.target.value as 'USDC' | 'INR')}
+                  value={depositCurrency}
+                  onChange={(e) => setDepositCurrency(e.target.value as 'AED')}
                   size="lg"
                   fontSize="lg"
                   fontWeight="600"
                   h="64px"
                   icon={<FaMoneyBillWave />}
                 >
-                  <option value="USDC">🇺🇸 USDC (USD Coin)</option>
-                  <option value="INR">🇮🇳 INR (Indian Rupee)</option>
+                  <option value="AED">🇦🇪 AED (UAE Dirham)</option>
                 </Select>
               </FormControl>
 
@@ -339,14 +343,14 @@ export const Faucet = () => {
                   color="gray.700"
                   mb={3}
                 >
-                  Deposit Amount (via XLM swap)
+                  Deposit Amount (AED)
                 </FormLabel>
                 <NumberInput
-                  value={xlmAmount}
-                  onChange={(valueString) => setXlmAmount(valueString)}
-                  min={0.1}
+                  value={depositAmount}
+                  onChange={(valueString) => setDepositAmount(valueString)}
+                  min={10}
                   max={10000}
-                  step={0.1}
+                  step={10}
                   size="lg"
                 >
                   <NumberInputField 
@@ -361,7 +365,7 @@ export const Faucet = () => {
                   </NumberInputStepper>
                 </NumberInput>
                 <Text fontSize="xs" color="gray.500" mt={2}>
-                  Simulated Rate: 1 XLM = {EXCHANGE_RATES[selectedToken].toLocaleString()} {selectedToken}
+                  Exchange Rate: 1 USDC = {EXCHANGE_RATES.AED_PER_USDC} AED
                 </Text>
               </FormControl>
 
@@ -376,17 +380,20 @@ export const Faucet = () => {
               >
                 <VStack spacing={4}>
                   <Text fontSize="sm" fontWeight="700" color="gray.600" textTransform="uppercase">
-                    Your Wallet Will Receive
+                    You Receive (In Wallet)
                   </Text>
                   <HStack spacing={4} justify="center" align="center">
                     <Icon as={FaMoneyBillWave} boxSize={8} color="green.500" />
                     <Text fontSize="4xl" fontWeight="900" color="brand.800">
-                      {tokenAmount.toLocaleString()}
+                      {usdcAmount.toLocaleString()}
                     </Text>
                     <Text fontSize="xl" fontWeight="700" color="gray.500">
-                      {selectedToken}
+                      USDC
                     </Text>
                   </HStack>
+                   <Text fontSize="xs" color="gray.400">
+                    (Requires ~{xlmRequired} XLM test tokens to simulate)
+                  </Text>
                 </VStack>
               </Box>
 
@@ -401,7 +408,7 @@ export const Faucet = () => {
                 onClick={handleClaim}
                 isLoading={isLoading}
                 loadingText="Processing Deposit..."
-                isDisabled={!xlmAmount || parseFloat(xlmAmount) <= 0}
+                isDisabled={!depositAmount || parseFloat(depositAmount) <= 0}
                 leftIcon={<FaUniversity />}
                 boxShadow="0 8px 24px rgba(49, 151, 149, 0.3)"
                 _hover={{
@@ -410,7 +417,7 @@ export const Faucet = () => {
                 }}
                 transition="all 0.3s"
               >
-                Deposit Funds
+                Deposit AED Cash
               </Button>
 
               <Text fontSize="xs" color="gray.500" textAlign="center">

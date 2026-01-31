@@ -173,25 +173,26 @@ async function setupLiquidity() {
         })
         // XLM → USDC: Sell USDC for XLM
         // Rate: 1 XLM = 0.1 USDC. 
-        // Price = buying/selling = XLM/USDC = 1/0.1 = 10? No.
-        // manageSellOffer(selling: USDC, buying: XLM, price: 10) -> 1 USDC costs 10 XLM.
-        // Correct.
+        // We want to SELL USDC at a HIGHER price (Ask)
+        // Price = Buying(XLM) / Selling(USDC)
+        // Let's ask for 10.5 XLM per USDC.
         .addOperation(StellarSdk.Operation.manageSellOffer({
             selling: USDC,
             buying: XLM,
             amount: '50000', // Sell 50k USDC
-            price: '10.0',   // 1 USDC = 10 XLM
+            price: '10.5',   // 1 USDC = 10.5 XLM
         }))
         
         // USDC → XLM: Sell XLM for USDC
-        // Rate: 10 XLM = 1 USDC.
-        // Price = buying/selling = USDC/XLM = 0.1
-        // manageSellOffer(selling: XLM, buying: USDC, price: 0.1) -> 1 XLM costs 0.1 USDC.
+        // We want to BUY USDC (Sell XLM) at a LOWER price (Bid)
+        // Price = Buying(USDC) / Selling(XLM)
+        // Let's buy USDC effectively at 10.0 XLM.
+        // So Price = 1 / 10.0 = 0.1 USDC per XLM.
         .addOperation(StellarSdk.Operation.manageSellOffer({
             selling: XLM,
             buying: USDC,
             amount: '5000',
-            price: '0.1',   
+            price: '0.1',   // 1 XLM = 0.1 USDC (=> 1 USDC = 10 XLM)
         }))
         
         // XLM → INR: Sell INR for XLM

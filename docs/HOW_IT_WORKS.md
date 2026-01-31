@@ -41,30 +41,30 @@ VatanPay is a blockchain-based remittance platform that enables Indian migrant w
 graph TB
     subgraph "UAE Side"
         Worker[Worker's Wallet]
-        UAEBank[VatanPay UAE Bank Account]
+        MoneyGram[MoneyGram Location]
     end
 
     subgraph "Stellar Blockchain"
         SC[Smart Contract<br/>Escrow]
-        DEX[Stellar DEX<br/>AED/USDC/INR]
-        AED[AED Tokens]
+        DEX[Stellar DEX<br/>USDC/INR]
+        USDC[USDC Tokens]
         INR[INR Tokens]
     end
 
     subgraph "India Side"
         Recipient[Recipient's Wallet]
-        IndiaBank[VatanPay India Bank Account]
-        Family[Family's Bank Account]
+        IndiaAnchor[MoneyGram India]
+        Family[Family's Cash Pickup]
     end
 
-    Worker -->|1. Deposit Real AED| UAEAnchor[Partner Anchor]
-    UAEAnchor -->|2. Issue AED Tokens| Worker
-    Worker -->|3. Send via App| SC
+    Worker -->|1. Deposit Real AED| MoneyGram
+    MoneyGram -->|2. Issue USDC| Worker
+    Worker -->|3. Send USDC via App| SC
     SC -->|4. Path Payment| DEX
-    DEX -->|5. Convert AED→XLM→INR| INR
+    DEX -->|5. Convert USDC→XLM→INR| INR
     INR -->|6. Deliver| Recipient
-    Recipient -->|7. Redeem| IndiaAnchor[Partner Anchor]
-    IndiaAnchor -->|8. Transfer Real INR| Family
+    Recipient -->|7. Redeem| IndiaAnchor
+    IndiaAnchor -->|8. Handover Real INR| Family
 ```
 
 ### Three-Layer Architecture
@@ -80,15 +80,15 @@ graph TB
 
 - **Smart Contract**: Escrow and transaction management
 - **Stellar DEX**: Automatic currency conversion
-- **Path Payments**: Multi-hop trading (AED→XLM→INR)
+- **Path Payments**: Multi-hop trading (USDC→XLM→INR)
 - **Network Fees**: ~$0.00001 per transaction
 
-#### 3. Banking Layer (Not in Demo)
+#### 3. Infrastructure Layer (MoneyGram)
 
-- Fiat on-ramp (Real AED → AED Tokens)
-- Fiat off-ramp (INR Tokens → Real INR)
+- Fiat on-ramp (Cash AED → USDC)
+- Fiat off-ramp (INR Tokens → Cash INR)
 - KYC/AML compliance
-- Reserve management
+- Global settlement network
 
 ---
 
@@ -135,24 +135,24 @@ We are the **Experience Layer** on top of MoneyGram's **Infrastructure Layer**.
 ```mermaid
 sequenceDiagram
     participant Worker
-    participant Exchange as Exchange/Anchor (Partner)
+    participant MoneyGram
     participant Stellar as Stellar Network
     participant VatanPay as VatanPay App
 
-    Worker->>Exchange: 1. Deposit 1,000 AED
-    Exchange->>Stellar: 2. Issue 1,000 AED tokens
-    Stellar->>Worker: 3. Tokens arrive in wallet
+    Worker->>MoneyGram: 1. Deposit 1,000 AED
+    MoneyGram->>Stellar: 2. Issue ~272 USDC
+    Stellar->>Worker: 3. USDC arrives in wallet
     Worker->>VatanPay: 4. Connect Wallet & Send
 ```
 
 **Steps:**
 
-1.  Worker deposits **real AED** to a partner Anchor (e.g., a local exchange house)
-2.  Anchor verifies deposit and KYC
-3.  Anchor issues **AED tokens** to worker's wallet
-4.  Worker opens VatanPay to send money
+1.  Worker deposits **real AED** to a MoneyGram agent.
+2.  Agent verifies deposit and KYC.
+3.  MoneyGram issues **USDC** to worker's wallet at current exchange rate.
+4.  Worker opens VatanPay to send money.
 
-**VatanPay serves as the "Venmo" interface**, while the Anchor acts as the "Bank".
+**VatanPay serves as the "Venmo" interface**, while MoneyGram acts as the "Bank".
 
 ### Off-Ramp Process (Tokens → Real Money)
 
@@ -161,28 +161,29 @@ sequenceDiagram
     participant Family
     participant VatanPay as VatanPay App
     participant Stellar as Stellar Network
-    participant Anchor as India Anchor (Partner)
-    participant Bank as Family's Bank
+    participant MoneyGram
+    participant Cash
 
-    Family->>VatanPay: 1. Click "Withdraw"
-    VatanPay->>Stellar: 2. Send INR tokens to Anchor
-    Stellar->>Anchor: 3. Transfer tokens
-    Anchor->>Bank: 4. Send real INR (IMPS/UPI)
-    Bank->>Family: 5. Money received!
+    Family->>VatanPay: 1. Receive INR Tokens
+    VatanPay->>Stellar: 2. Send INR to MoneyGram
+    Stellar->>MoneyGram: 3. Transfer tokens
+    MoneyGram->>Cash: 4. Dispense Cash
+    Cash->>Family: 5. Money received!
 ```
 
 **Steps:**
 
-1.  Family receives INR tokens in VatanPay app
-2.  Clicks "Withdraw to Bank"
-3.  VatanPay routes tokens to a licensed **Indian Anchor**
-4.  Anchor sends **real INR** to family's bank account via UPI/IMPS
+1.  Family receives INR tokens (converted from USDC) in VatanPay app.
+2.  Clicks "Withdraw Cash".
+3.  VatanPay routes tokens to a **MoneyGram India** agent.
+4.  Agent hands over **real INR** cash.
 
 **Why this works:**
 
 - **Non-Custodial**: VatanPay never holds fiat currency
-- **Regulatory Compliance**: Anchors handle KYC/AML
-- **Scalability**: We focus on software, Anchors handle banking
+- **Regulatory Compliance**: MoneyGram handles KYC/AML
+- **Scalability**: We focus on software, MoneyGram handles cash
+- **Stability**: USDC is fully backed and trusted
 
 ---
 
@@ -192,16 +193,16 @@ sequenceDiagram
 
 ```mermaid
 graph LR
-    A[Worker Deposits<br/>1000 AED] --> B[Receives<br/>1000 AED Tokens]
+    A[Worker Deposits<br/>1,000 AED] --> B[Receives<br/>~272 USDC]
     B --> C[Opens VatanPay App]
     C --> D[Enters Amount<br/>& Recipient]
-    D --> E[Smart Contract<br/>Locks Tokens]
+    D --> E[Smart Contract<br/>Locks USDC]
     E --> F[Stellar DEX<br/>Path Payment]
-    F --> G[AED → XLM]
+    F --> G[USDC → XLM]
     G --> H[XLM → INR]
     H --> I[INR Tokens to<br/>Recipient Wallet]
     I --> J[Recipient Redeems<br/>for Real INR]
-    J --> K[Money in Family's<br/>Bank Account]
+    J --> K[Family Pickups<br/>Cash]
 
     style E fill:#0FA7FF
     style F fill:#00FF90

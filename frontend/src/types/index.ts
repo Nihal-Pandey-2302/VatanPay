@@ -2,6 +2,10 @@
 export interface WalletInfo {
   publicKey: string;
   isConnected: boolean;
+  balances?: {
+    native: string;
+    usdc?: string;
+  };
 }
 
 // Remittance types

@@ -4,6 +4,7 @@ import {
   requestAccess,
   signTransaction,
 } from '@stellar/freighter-api';
+import * as StellarSdk from 'stellar-sdk';
 import type { WalletInfo } from '../types';
 
 export type { WalletInfo } from '../types';
@@ -42,10 +43,32 @@ export const connectWallet = async (): Promise<WalletInfo> => {
     }
     
     console.log('[Wallet] Successfully connected. Public key:', publicKey);
+
+    // Fetch balances
+    const server = new StellarSdk.Horizon.Server('https://horizon-testnet.stellar.org');
+    let balances = { native: '0', usdc: '0' };
+    
+    try {
+      const account = await server.loadAccount(publicKey);
+      const nativeBalance = account.balances.find((b: any) => b.asset_type === 'native');
+      const usdcBalance = account.balances.find((b: any) => 
+        b.asset_code === 'USDC' && 
+        b.asset_issuer === (import.meta.env.VITE_AED_ISSUER || 'GCGH7MHBMNIRWEU6XKZ4CUGESGWZHQJL36ZI2ZOSZAQV6PREJDNYKEYZ')
+      );
+
+      balances = {
+        native: nativeBalance ? nativeBalance.balance : '0',
+        usdc: usdcBalance ? usdcBalance.balance : '0',
+      };
+      console.log('[Wallet] Fetched balances:', balances);
+    } catch (e) {
+      console.warn('[Wallet] Failed to fetch balances (new account?):', e);
+    }
     
     return {
       publicKey,
       isConnected: true,
+      balances
     };
   } catch (error) {
     console.error('[Wallet] Failed to connect:', error);
