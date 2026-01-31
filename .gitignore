@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+target/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Build Artifacts
+dist/
+build/
+
+# Soroban / Stellar
+.stellar/
+.soroban/
+soroban-generated/
+
+# OS and IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.iml
