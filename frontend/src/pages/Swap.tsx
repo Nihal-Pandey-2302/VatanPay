@@ -27,10 +27,10 @@ import { signTransaction } from '@stellar/freighter-api';
 
 // Exchange rates (matching our liquidity pool rates)
 const EXCHANGE_RATES = {
-  'XLM-AED': 200, // 1 XLM = 200 AED
-  'AED-XLM': 0.005, // 1 AED = 0.005 XLM
-  'XLM-INR': 4500, // 1 XLM = 4500 INR
-  'INR-XLM': 0.000222, // 1 INR ≈ 0.000222 XLM
+  'XLM-AED': 0.33,  // 1 XLM ≈ 0.33 AED
+  'AED-XLM': 1.1,   // 1 AED ≈ 1.1 XLM
+  'XLM-INR': 20,    // 1 XLM = 20 INR
+  'INR-XLM': 0.05,  // 1 INR = 0.05 XLM
 };
 
 type TokenType = 'XLM' | 'AED' | 'INR';

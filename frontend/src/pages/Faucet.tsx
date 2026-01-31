@@ -29,8 +29,8 @@ import { signTransaction } from '@stellar/freighter-api';
 // Exchange rates (tokens per XLM)
 // Realistic exchange rates matching DEX liquidity for demo simulation
 const EXCHANGE_RATES = {
-  AED: 200, 
-  INR: 20, 
+  AED: 0.33, // 1 XLM ≈ 0.33 AED (Market Rate) 
+  INR: 20,   // 1 XLM = 20 INR
   XLM: 1,
 };
 
