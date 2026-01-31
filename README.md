@@ -9,7 +9,7 @@
 [![React](https://img.shields.io/badge/React-18-61DAFB)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)](https://www.typescriptlang.org)
 
-[Live Demo](#) | [Documentation](./docs/HOW_IT_WORKS.md) | [Business Model](./docs/BUSINESS_MODEL.md)
+[Live Demo](https://vatan-pay.vercel.app/) | [Documentation](./docs/HOW_IT_WORKS.md) | [Business Model](./docs/BUSINESS_MODEL.md)
 
 </div>
 
@@ -139,17 +139,17 @@ sequenceDiagram
     User->Frontend: Enter amount & recipient
     Frontend->DEX: Query exchange rate
     DEX-->Frontend: 1 AED = 22.50 INR
-    
+
     Note over Frontend,Contract: STEP 1 - ESCROW
     Frontend->Contract: create_remittance(1000 AED)
     Contract->Contract: Lock AED in escrow
     Contract-->Frontend: Remittance ID
-    
+
     Note over Frontend,Family: STEP 2 - PATH PAYMENT
     Frontend->DEX: Execute AED→USDC→INR
     DEX->Family: Transfer 22,450 INR
     DEX-->Frontend: Transaction hash
-    
+
     Note over Frontend,Contract: STEP 3 - COMPLETE
     Frontend->Contract: complete_remittance()
     Contract->Contract: Mark complete
@@ -479,4 +479,3 @@ To launch VatanPay in production:
 **Powered by Stellar & Soroban** | **Addressing the $36B Gulf-India remittance corridor** | **Built with ❤️ for migrant workers**
 
 </div>
-# VatanPay
