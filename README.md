@@ -19,8 +19,8 @@
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/remittchain
-cd remittchain
+git clone https://github.com/Nihal-Pandey-2302/VatanPay
+cd VatanPay
 
 # Start development server (automatically installs dependencies)
 ./start.sh
@@ -261,7 +261,7 @@ sequenceDiagram
 ## 📁 Project Structure
 
 ```
-remittchain/
+VatanPay/
 ├── contract/                 # Soroban smart contract
 │   ├── src/
 │   │   ├── lib.rs           # Main contract logic
