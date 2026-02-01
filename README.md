@@ -375,7 +375,18 @@ VatanPay/
 
 Download from [freighter.app](https://freighter.app) and set to **Testnet mode**.
 
-### 2. Bank Deposit (On-Ramp)
+### 2. Establish Trust Lines (Crucial)
+
+Both the **Sender Wallet** and **Recipient Wallet** must have trust lines for VatanPay assets (USDC/INR) to receive transfers.
+
+**How to activate:**
+
+1. Connect the wallet to VatanPay.
+2. Go to the **Bank Deposit (Faucet)** page.
+3. Click "Deposit" once.
+4. This auto-activates the trust lines. **Make sure the Recipient Wallet has done this too!**
+
+### 3. Bank Deposit (On-Ramp)
 
 In the real world, you would walk into a MoneyGram agent. In this demo:
 
@@ -384,7 +395,7 @@ In the real world, you would walk into a MoneyGram agent. In this demo:
 - Click "**Deposit AED Cash**"
 - The system simulates a cash deposit and sends **USDC** to your wallet
 
-### 3. Send Money
+### 4. Send Money
 
 1. Visit **Send Money** page
 2. Enter amount in **USDC** (e.g., 10 USDC)
@@ -393,7 +404,7 @@ In the real world, you would walk into a MoneyGram agent. In this demo:
 5. Confirm transaction
 6. Recipient receives **INR** instantly!
 
-### 4. Cash Out (Simulated)
+### 5. Cash Out (Simulated)
 
 - Visit **Swap** page
 - Convert remaining AED/INR to XLM
