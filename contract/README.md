@@ -36,7 +36,7 @@ Initialize contract with admin address (one-time).
 
 ### `create_remittance(sender: Address, recipient: Address, amount: i128, token_address: Address) -> BytesN<32>`
 
-Create a new remittance and escrow AED tokens.
+Create a new remittance and escrow tokens (USDC/AED).
 
 - Min amount: 100 AED
 - Max amount: 50,000 AED

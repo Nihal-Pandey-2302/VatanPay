@@ -517,5 +517,5 @@ No! The app abstracts all blockchain complexity:
 
 ---
 
-**Last Updated**: January 30, 2026  
-**Version**: 1.0 (Testnet Demo)
+**Last Updated**: February 1, 2026  
+**Version**: 2.0 (MoneyGram + USDC MVP)

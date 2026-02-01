@@ -649,5 +649,5 @@ More transactions:
 
 ---
 
-**Last Updated**: January 30, 2026  
+**Last Updated**: February 1, 2026  
 **Author**: VatanPay Team

@@ -5,8 +5,8 @@ React + TypeScript + Chakra UI frontend for VatanPay remittance platform.
 ## Features
 
 - **Freighter Wallet Integration**: Connect Stellar wallet seamlessly
-- **Real-time Exchange Rates**: Live AED → INR rates from Stellar DEX
-- **Path Payments**: Automated AED → USDC → INR conversion
+- **Real-time Exchange Rates**: Live USDC → INR rates from Stellar DEX
+- **Path Payments**: Automated USDC → INR conversion
 - **Transaction History**: View all past remittances
 - **Mobile Responsive**: Works perfectly on phones and desktops
 
@@ -66,7 +66,7 @@ src/
 
 ### Send Money Page
 
-- Amount input (100-50,000 AED)
+- Amount input (e.g. 10 USDC)
 - Real-time exchange rate display
 - Fee breakdown (0.5%)
 - Recipient address input
@@ -105,18 +105,10 @@ npm run preview
 
 ## Important Notes
 
-### TODO Before Demo:
+### Setup:
 
-1. **Replace placeholder values** in `SendMoney.tsx`:
-   - `AED_ASSET` issuer address
-   - `INR_ASSET` issuer address
-   - `AED_TOKEN_ADDRESS`
-
-2. **Deploy contract** and update `.env` with real `CONTRACT_ID`
-
-3. **Set up test assets** on Stellar Testnet (run `../scripts/setup-testnet.sh`)
-
-4. **Test wallet connection** with Freighter extension installed
+1. **Environment Variables**: ensure `.env` has the correct `CONTRACT_ID`.
+2. **Freighter**: Ensure wallet is connected on Testnet.
 
 ### Known Limitations (MVP):
 

@@ -46,9 +46,9 @@ VatanPay enables Indian migrant workers in the Gulf to send money home instantly
 
 ## 🚨 Problem Statement
 
-### The $36 Billion Challenge
+### The $50 Billion Challenge
 
-Every year, **9 million Indian migrant workers** in the Gulf send **$36 billion** home to support their families. But traditional remittance services extract **$2.5 billion in fees** from these hard-earned wages.
+Every year, **10 million Indian migrant workers** in the Gulf send **$50 billion** home to support their families. But traditional remittance services extract **$2.5 billion in fees** from these hard-earned wages.
 
 ### Who Suffers?
 
