@@ -178,6 +178,17 @@ sequenceDiagram
 
 ---
 
+## 🌟 Why Stellar?
+
+VatanPay chose the **Stellar Network** because it was built specifically for payments.
+
+| Feature           | Stellar Benefit         | Why it Matters                                                                          |
+| :---------------- | :---------------------- | :-------------------------------------------------------------------------------------- |
+| **Path Payments** | Atomic Asset Conversion | We can convert USDC → local INR in ONE transaction without holding multiple currencies. |
+| **Speed**         | 3-5 Second Finality     | Remittance feels like an instant message, not a 3-day bank wire.                        |
+| **Cost**          | <$0.00001 Fees          | We can offer 0.5% fees and still maintain 85% margins.                                  |
+| **Anchors**       | MoneyGram Integration   | Native standards (SEP-24) to connect crypto to cash at 400,000+ locations.              |
+
 ## 📊 Comparison
 
 | Feature          | VatanPay  | Western Union | Bank Transfer  |
@@ -490,6 +501,25 @@ To launch VatanPay in production:
 - [ ] Fraud detection systems
 - [ ] Liquidity management
 - [ ] Marketing to diaspora communities
+
+---
+
+## ❓ Frequently Asked Questions
+
+**Q: "Why trust your tokens?"**
+"We don't issue tokens. We use **Circle's USDC** via MoneyGram's licensed network. $60B in circulation, backed by US Treasury bonds."
+
+**Q: "Why would MoneyGram work with you?"**
+"MoneyGram has infrastructure but terrible UX. Their app has 2.3 stars. We bring them the Gulf-India corridor with mobile-first experience they can't build themselves. We're the Venmo to their banking rails."
+
+**Q: "What if path payment fails?"**
+"Stellar path payments are atomic - they either **fully succeed** or **fully fail and refund**. Our smart contract also has a 24-hour refund mechanism as a backup."
+
+**Q: "How do you make money at 0.5%?"**
+"Our variable cost per transaction is ~$0.30 (compliance, infrastructure). Revenue is $1.36 per $272 USDC transfer. That's **77% gross margin**. Blockchain is 15x more efficient than correspondent banking."
+
+**Q: "Who are your competitors?"**
+"Western Union, Wise, Remitly. Western Union charges 6% and takes 3 days. Wise charges 1-2% but still uses SWIFT. We're 0.5% total with instant settlement. Only possible on blockchain."
 
 ---
 
