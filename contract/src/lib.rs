@@ -30,6 +30,7 @@ pub struct Remittance {
     pub amount_inr: i128,
     pub exchange_rate: i128, // Rate with 7 decimal precision
     pub fee: i128,
+    pub token_address: Address,
     pub status: Symbol,
     pub created_at: u64,
 }
@@ -119,6 +120,7 @@ impl VatanPayContract {
             amount_inr: 0,
             exchange_rate: 0,
             fee,
+            token_address: token_address.clone(),
             status: STATUS_PENDING,
             created_at: env.ledger().timestamp(),
         };
@@ -154,6 +156,9 @@ impl VatanPayContract {
             .get(&key)
             .expect("Remittance not found");
 
+        // Security: Ensure only the sender (or an admin) can complete it
+        remittance.sender.require_auth();
+
         if remittance.status != STATUS_PENDING {
             panic!("Remittance is not pending");
         }
@@ -173,7 +178,7 @@ impl VatanPayContract {
     }
 
     /// Refund a failed remittance
-    pub fn refund_remittance(env: Env, id: BytesN<32>, token_address: Address) {
+    pub fn refund_remittance(env: Env, id: BytesN<32>) {
         let key = DataKey::Remittance(id.clone());
         let mut remittance: Remittance = env
             .storage()
@@ -193,7 +198,7 @@ impl VatanPayContract {
         }
 
         // Return AED to sender
-        let token_client = token::Client::new(&env, &token_address);
+        let token_client = token::Client::new(&env, &remittance.token_address);
         token_client.transfer(
             &env.current_contract_address(),
             &remittance.sender,

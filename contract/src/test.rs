@@ -5,7 +5,7 @@ use soroban_sdk::{
     symbol_short, testutils::{Address as _, Ledger, LedgerInfo}, token, vec, Address, Env,
 };
 
-fn create_test_token(env: &Env, admin: &Address) -> (token::Client, token::StellarAssetClient) {
+fn create_test_token<'a>(env: &'a Env, admin: &Address) -> (token::Client<'a>, token::StellarAssetClient<'a>) {
     let contract_address = env.register_stellar_asset_contract_v2(admin.clone());
     (
         token::Client::new(env, &contract_address.address()),
@@ -87,25 +87,21 @@ fn test_amount_validation() {
     token_admin.mint(&sender, &100000_0000000);
 
     // Test amount too small (should panic)
-    let result = std::panic::catch_unwind(|| {
-        client.create_remittance(
-            &sender,
-            &recipient,
-            &50_0000000, // 50 AED (below minimum)
-            &token.address,
-        );
-    });
+    let result = client.try_create_remittance(
+        &sender,
+        &recipient,
+        &50_0000000, // 50 AED (below minimum)
+        &token.address,
+    );
     assert!(result.is_err());
 
     // Test amount too large (should panic)
-    let result = std::panic::catch_unwind(|| {
-        client.create_remittance(
-            &sender,
-            &recipient,
-            &60000_0000000, // 60,000 AED (above maximum)
-            &token.address,
-        );
-    });
+    let result = client.try_create_remittance(
+        &sender,
+        &recipient,
+        &60000_0000000, // 60,000 AED (above maximum)
+        &token.address,
+    );
     assert!(result.is_err());
 }
 
@@ -175,14 +171,12 @@ fn test_rate_limiting() {
     }
 
     // 6th should fail (rate limit exceeded)
-    let result = std::panic::catch_unwind(|| {
-        client.create_remittance(
-            &sender,
-            &recipient,
-            &500_0000000,
-            &token.address,
-        );
-    });
+    let result = client.try_create_remittance(
+        &sender,
+        &recipient,
+        &500_0000000,
+        &token.address,
+    );
     assert!(result.is_err());
 }
 
@@ -271,7 +265,7 @@ fn test_refund_remittance() {
     // Advance time by 24 hours
     env.ledger().set(LedgerInfo {
         timestamp: env.ledger().timestamp() + 86400,
-        protocol_version: 20,
+        protocol_version: 22,
         sequence_number: env.ledger().sequence(),
         network_id: Default::default(),
         base_reserve: 10,
@@ -281,7 +275,7 @@ fn test_refund_remittance() {
     });
 
     // Refund
-    client.refund_remittance(&remittance_id, &token.address);
+    client.refund_remittance(&remittance_id);
 
     // Verify refund
     assert_eq!(token.balance(&sender), initial_balance);
